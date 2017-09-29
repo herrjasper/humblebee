@@ -1,0 +1,239 @@
+\section{Spellingbee -- Spelling correction}
+
+
+\begin{frame}
+ 
+\begin{figure}[h]
+  \centering
+  \scalebox{.7}{
+    \begin{tabular}{lc@{\hspaceThis{XXXXXXXXXXX}}lrr}
+      Correct form (frequency)& & Misspelled form & N & edit distance \\
+      \hline
+      &&\node{a}{\alert{u}bernimmt} & 81 & 1 \\
+      &&\node{b}{überni\alert{n}mmt}& 6 & 1\\
+      &&\node{c}{übernimm\alert{n}t}& 1 & 1\\
+      &&\node{d}{überni\alert{e}mt} & 6 & 1\\
+      &&\node{e}{\alert{ö}bernimmt} & 6 & 1\\
+      &&\node{f}{übernim\alert{n}mt}& 5 & 1\\
+      &&\node{h}{übernimm\alert{e}t}& 11 & 1\\
+      \node{x}{übernimmt (297440)}&&\node{i}{überni\alert{eh}mt} & 2 & 2\\
+      &&\node{j}{überni\alert{e}mt} & 6 & 1\\
+      &&\node{k}{überni\alert{h}mt} & 17 & 1\\
+      &&\node{l}{überni\alert{iiiiiiimmmmm}mmt} & 1 & 12\\
+      &&\node{m}{überni\alert{o}mmt}& 4 & 1\\
+      &&\node{n}{übernim\alert{rn}t}& 4 & 2\\
+      &&\node{p}{überni\alert{u}mmt}& 2 & 1\\
+      &&\node{q}{überni\alert{nn}t} & 2 & 2\\
+      &&\node{r}{übernimm\alert{t}t}& 2 & 1\\
+      &&\node{o}{\ldots}
+    \end{tabular}
+    \anodeconnect[r]{x}[l]{a}
+    \anodeconnect[r]{x}[l]{b}
+    \anodeconnect[r]{x}[l]{c}
+    \anodeconnect[r]{x}[l]{d}
+    \anodeconnect[r]{x}[l]{e}
+    \anodeconnect[r]{x}[l]{f}
+    \anodeconnect[r]{x}[l]{h}
+    \anodeconnect[r]{x}[l]{i}
+    \anodeconnect[r]{x}[l]{j}
+    \anodeconnect[r]{x}[l]{k}
+    \anodeconnect[r]{x}[l]{l}
+    \anodeconnect[r]{x}[l]{m}
+    \anodeconnect[r]{x}[l]{n}
+    \anodeconnect[r]{x}[l]{p}
+    \anodeconnect[r]{x}[l]{q}
+    \anodeconnect[r]{x}[l]{r}
+    \anodeconnect[r]{x}[l]{o}
+  }
+  Some spelling variants of German \textit{übernimmt} (`takes over') from DECOW2012.
+\end{figure}
+
+\end{frame}
+
+
+
+\begin{frame}
+  {Automatic spelling correction}
+
+  \begin{enumerate}
+  \item Identify potential misspellings
+  \item Select candidate for replacement\label{select}
+    \begin{enumerate}
+    \item Produce candidates
+    \item Rank candidates 
+    \end{enumerate}
+  \item Decision: replace ``misspelling'' with best candidate?\label{decide}
+  \end{enumerate}
+
+
+Order also reflects the complexity of these steps .
+
+\end{frame}
+
+
+\begin{frame}{Identifying potential misspellings}
+
+  \begin{itemize}
+  \item using \texttt{Enchant} library
+  \item consult dictionaries: 
+    \begin{itemize}
+    \item \texttt{Aspell} en$_{GB}$
+    \item \texttt{Aspell} en$_{US}$
+    \item additional custom word list
+    \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}{Ranking candidates}
+
+\texttt{Enchant}/\texttt{Aspell} returns a ranked set of candidates.\\[1ex]
+
+$\rightarrow$ re-rank candidates using context information\\[2ex] 
+
+
+Language models: 
+  \begin{itemize}
+  \item from ``clean'' part of UKCOW2012 corpus (tokens)
+  \item unigrams (4.2 m types)
+  \item bigrams (74 m types)
+  \end{itemize}  
+\end{frame}
+
+
+
+\begin{frame}{Candidate re-ranking}
+  
+\begin{tabular}{l@{~}l@{~}|l@{~}|l@{~}l}
+   \textit{\ldots be necessarily brief} &  \textit{\alert<2>{but}} & efven & \textit{\alert<3>{that}} & \textit{being so does not excuse \ldots}\\
+\hline
+  &   & \textbf{even} &  & \\
+  &   & eleven &  & \\
+  &   & Evan &  & \\
+  &   & oven &  & \\
+  &   & \ldots &  & 
+\end{tabular}
+
+\vspace{1cm}
+
+Conditional probabilites:\\[1ex]
+
+\pause
+
+P(\textbf{candidate}|\alert<2>{preceding})
+
+P(\alert<3>{following}|\textbf{candidate})
+
+
+\end{frame}
+
+
+\begin{frame}{Ranking: Evaluation}
+  
+
+Best predictor: product of conditional probabilities\\
+
+
+\begin{itemize}
+\item Test set: 1007 potential mispellings, 85 real misspellings (8.4\%)
+\item<2-> Baseline: \texttt{Aspell}'s best candidate: 82.4\% correct
+\item<3-> Our re-ranking: 88.2\% correct % accuracy in candidate selection (trigram)
+\end{itemize}
+
+\visible<4->{
+
+
+But: replacement is a rare event.
+
+\begin{itemize}
+\item real misspellings of capitalized words: 1.82\%
+\item do not flag capitalized mid-sentence tokens as misspellings
+\item real misspellings among remaing tokens: 32.17\%
+\end{itemize}
+}
+\end{frame}
+
+
+
+\begin{frame}{Replace or leave as is?}
+
+\begin{itemize}
+\item extract more information about candidate and misspelling
+\item use balanced training set (50\% replace, 50\% leave-alone)
+\item model the decision with a logistic regression
+\end{itemize}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Logistic regression: predictors}
+
+Model trained on 310 instances.
+
+  \begin{itemize}
+  \item \alert<2->{\texttt{Aspell}'s original rank}
+  \item \alert<2->{edit distance}
+  \item number of alternative candidates
+  \item \alert<2->{capitalization of misspelling}
+  \item frequency of candidate in document
+  \item \alert<2->{frequency of misspelling in document}
+  \item bigrams: conditional probabilities misspelling
+  \item bigrams: conditional probabilities candidate
+  \item product of bigram conditional probabilities
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Model evaluation}
+
+On training data:\\[1ex]
+
+  \begin{tabular}{lr}
+   \% corr. & .81 \\
+   precision & .75\\
+   recall & .92 \\
+   F1  & .83
+  \end{tabular}
+
+\pause
+\vspace{1cm}
+
+
+On unseen test data (unbalanced: 30\% replace)\\[1ex]
+
+\begin{tabular}{lr}
+\% corr. & .63\\
+pecision & .45\\
+recall   & .77\\
+F1       & .56
+\end{tabular}
+
+\end{frame}
+
+
+
+\begin{frame}{Summary spelling correction}
+
+  \begin{itemize}
+  \item context information helps chosing the right candidate
+  \item toughest problem with web data: replace vs.\ leave-alone
+  \item so far, the model does not generalize well to unseen data
+  \end{itemize}
+
+\pause
+
+Next steps:
+
+\begin{itemize}
+\item restrict domain to more predictable cases
+\item incorporate noisy channel model for frequent misspellings
+\item use POS information
+\end{itemize}
+
+
+  
+\end{frame}

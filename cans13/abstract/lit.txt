@@ -1,0 +1,9 @@
+Giesbrecht, E. and Evert, S. 2009. Part-of-Speech (POS) Tagging -- a Solved Task? An Evaluation of POS Taggers for the German Web as Corpus. In: Alegria, I. and Leturia, I. and Sharoff, S. (eds.) Proceedings of the Fifth Web as Corpus Workshop (WAC5): 27-35
+Liu, V. and Curran, J. R. 2006. Web text corpus for natural language processing. 11th Conference of the European Chapter of the Association for Computational Linguistics. EACL: 233-240.
+Schäfer, R. and Bildhauer, F. 2012. Building Large Corpora from the Web Using a New Efficient Tool Chain. In Calzolari, N. and Choukri, K. and Declerck, T. and Doğan, M. U. and Maegaard, B. and Mariani, J. and Odijk, J. and Piperidis, S. (eds.) Proceedings of the Eight International Conference on Language Resources and Evaluation (LREC'12). ELRA: 486-493.
+Schäfer, R. and Bildhauer, F. 2013, to appear. Web Corpus Construction. San Francisco: Morgan and Claypool.
+Schmid, H. 1994. Probabilistic Part-of-Speech Tagging Using Decision Trees. In: Proceedings of International Conference on New Methods in Language Processing.
+Schäfer, R. and Sayatz, U. 2013, submitted. Die Kurzformen des Indefinitartikels im Deutschen.
+Subramaniam, L. V. and Roy, S. and Faruquie, T. A. and Negi, S. 2009. A survey of types of text noise and techniques to handle noisy text. In: Proceedings of The Third Workshop on Analytics for Noisy Unstructured Text Data, ACM: 115-122.
+Zeldes, A. and Ritz, J. and Lüdeling, A. and Chiarcos, Chr. 2009. ANNIS: A Search Tool for Multi-Layer Annotated Corpora. In: Proceedings of Corpus Linguistics 2009.
+Grefenstette, G. and Tapanainen, P. 1994. What is a word? What is a sentence? In: Proceedings of 3rd Conference on Computational Lexicography and Text Research.

@@ -1,0 +1,232 @@
+\documentclass{beamer}
+%\documentclass[handout]{beamer}
+\usepackage{etex}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage[english]{babel}
+\usepackage{tree-dvips}
+\usepackage{color}
+\usepackage{colortbl}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathabx}
+\usepackage{textcomp}
+\usepackage{natbib}
+\usepackage{tocvsec2}
+\usepackage{xyling}
+\usepackage{multirow}
+\usepackage{nicefrac}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage{tree-dvips}
+\usepackage{gb4e-}
+
+\title[Token-level noise and non-destructive normalization]{\Large Token-level noise in large web corpora\\
+and non-destructive normalization\\
+for linguistic applications}
+\author[Felix Bildhauer, Roland Schäfer]{\Large Felix Bildhauer and Roland Schäfer}
+\institute{SFB 632/A2, German Grammar and Linguistics (FU Berlin)}
+\date{CANS, Lancaster, July 22, 2013}
+
+\usetheme{FUBerlin}
+%\definecolor{beamer@fuorange}{rgb}{.9,0.5,0.1}
+\definecolor{beamer@fuorange}{rgb}{.8,.3,0}
+\definecolor{Gray}{gray}{0.5}
+\definecolor{Black}{gray}{0}
+\setbeamercolor{alerted text}{fg=beamer@fuorange}
+\titlegraphic{\includegraphics[height=3cm]{muhkuh}}%
+\fuberlinlogon{0.8cm}
+\renewcommand{\fuberlinfootstring}{\insertshortauthor{} \number\year, \insertshortinstitute}
+
+\setcounter{tocdepth}{1}
+
+\AtBeginSection[]
+{
+  \settocdepth{subsection}
+  \begin{frame}
+    \frametitle{We are here\dots}
+%      \begin{multicols}{2}
+         \footnotesize
+         \tableofcontents%[currentsection, hideothersubsections]
+%      \end{multicols}
+   \end{frame}
+  \settocdepth{subsubsection}
+}
+
+\newcommand{\xxx}{\hspaceThis{[}}
+
+\newcommand{\Lf}{
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}
+
+\newcommand{\graw}[1]{{\color[rgb]{0.8,0.8,0.8}#1}}
+\newcommand{\blaw}[1]{{\color[rgb]{0.2,0.2,0.9}#1}}
+\newcommand{\grien}[1]{{\color[rgb]{0.1,0.6,0.1}#1}}
+\newcommand{\myalert}[2]{{\color<#1>[rgb]{0,0.7,0}#2}}
+\newcommand{\eg}{e.\,g.}
+\newcommand{\Eg}{E.\,g.}
+\newcommand{\ie}{i.\,e.}
+\newcommand{\Ie}{I.\,e.}
+\newcommand{\Dim}{\cellcolor{Gray}}
+\newcommand{\Off}{\cellcolor{Black}}
+
+\newcounter{lastpagemainpart}
+
+\begin{document}
+
+\fuberlintitlepage[12pt]
+
+\begin{frame}
+  \footnotesize
+  \vspace{0.1cm}
+  \begin{center}
+    COW project:\\
+    \alert{\url{http://hpsg.fu-berlin.de/cow/}}\\
+    \vspace{0.3cm}
+
+    \texttt{texrex} (current version: \texttt{texrex-hyperhyper}):\\
+    \alert{\url{http://sourceforge.net/projects/texrex/}}
+    \vspace{0.3cm}
+
+    \textbf{Our brand new book on web corpora}:\\
+    \alert{\url{http://sites.morganclaypool.com/wcc/}}\\
+    \alert{\url{http://www.morganclaypool.com/toc/hlt/2/1}}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  {Overview}
+%    \begin{multicols}{2}
+       \footnotesize
+       \tableofcontents[hideallsubsections]
+%    \end{multicols}
+\end{frame}
+
+\section{Introduction: Noise in web corpora}
+
+\begin{frame}
+  {Dimensions of noisiness}
+  \begin{center}
+    \begin{tabular}{lrl}
+      \hline
+      N tokens:         & 9,108,097,177&\\
+      N types:          & 63,569,767&\\
+      N hapax legomena: & 39,988,127&\\
+      \hline
+    \end{tabular}\\
+
+    \vspace{0.8cm}
+    {\tiny Proliferation of types: type and token counts for German web corpus DECOW2012\\
+      \cite{Schaefer-Bildhauer2012a,SchaeferBildhauer2013}\\
+      similar results in \cite{LiuCurran2006}}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  {Noise in web corpora}
+  \begin{center}
+    
+    \begin{tabular}{lrr}
+      Source & \% & 95\% CI ($\pm\%$)\\
+      \hline
+      misspelling               & $20.0$ & $5.0$\\
+      tokenization error        & $17.6$ & $4.7$\\
+      non-word                  &  $7.6$ & $3.3$\\
+      foreign-language material &  $6.8$ & $3.1$\\
+      \hline
+      rare word & $46.8$ & $6.2$ \\
+      number    &  $1.2$ & $1.3$ \\
+    \end{tabular}\\
+
+    \vspace{0.3cm}
+    {\tiny Classification of hapax legomena in DECOW2012;\\
+    estimated proportions of different categories ($n=250$), with 95\% confidence interval (CI)\\
+    \cite{SchaeferBildhauer2013}}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  {Classification of errors in POS tagging}
+  The background of the work presented here:
+  \begin{itemize}
+    \item improve linguistic post-processing (considerably\\
+      lower quality in web corpora, \citealp{GiesbrechtEvert2009})
+    \item allow users to also retrieve misspelled words etc.
+  \end{itemize}
+  \begin{center}
+    \scalebox{0.7}{
+      \begin{tabular}{l|r}
+	\hline
+	Class & \% \\
+	\hline
+	non-standard orthography & $32.3$\\
+	lexicon gaps& $19.8$  \\
+	foreign language material &  $18.9$\\
+	emoticons &  $13.7$\\
+	named entities &  $5.4$\\
+	tokenization errors &  $3.1$\\
+	other &  $6.8$\\
+	\hline
+      \end{tabular}
+    }\\
+
+    \vspace{0.3cm}
+    {\tiny sample drawn from a sub-corpus of DECOW2012 containing predominantly informal language}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  {Breakdown of non-standard orthography (DECOW2012)} 
+  \begin{center}
+    \begin{tabular}{l|r}
+      \hline
+      Class & \%\\
+      \hline
+      genre-specific spellings & $59.2$\\
+      omitted whitespace & $13.4$\\
+      variants        & $19.7$\\
+      ordinary typos & $7.56$\\
+      \hline    
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\include{hydra}
+\include{spellingbee}
+\include{nondestructo}
+
+\begin{frame}
+  {Summary}
+  \begin{itemize}
+    \item Web corpora are noisy, but the noise is valuable data,\\
+      and the valuable data is noise.
+    \item High-quality dehyphenation is surprisingly simple \graw{for German}\\
+      and need not\slash cannot be executed non-destructively.
+    \item Spelling correction is (still) as difficult as we knew it was.
+    \item Huge non-destructively normalized web corpora are possible\\
+      and, in fact, available (soon).
+  \end{itemize}
+\end{frame}
+
+% --------------- REFS + APPENDIX
+
+\begin{frame}[allowframebreaks]
+{References}
+\def\newblock{\hskip .11em plus .33em minus .07em}
+\tiny
+\bibliographystyle{abbrvnat} 
+\bibliography{cowbib}
+\end{frame}
+
+\makeatletter
+\setcounter{lastpagemainpart}{\the\c@framenumber}
+\makeatother
+
+%\appendix
+%\section{Appendix}
+
+\mode<beamer>{\setcounter{framenumber}{\thelastpagemainpart}}
+\end{document}

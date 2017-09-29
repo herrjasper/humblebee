@@ -1,0 +1,60 @@
+\section{Non-destructive normalization}
+
+\begin{frame}
+  {Reasons for non-destructive normalization}
+  \begin{itemize}
+    \item our goal: carefully sampled and processed web corpora\\
+      for fundamental research -- theoretical linguistics,\\
+      linguistic web characterization
+    \item \alert{noise or distortion through processing intolerable}
+    \item \alert{Leave major destructive design decisions to the user!}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  {Web data specific research}
+  \begin{itemize}
+    \item findings in \citeauthor{SchaeferSayatz2013} (submitted):\\
+      non-standard cliticized forms of the German indefinite article\\
+      are frequent in web data, totally absent elsewhere
+    \item \textit{ein} $\Rightarrow$ \textit{n}, \textit{einem} $\Rightarrow$ \textit{nem}, etc.
+    \item longstanding morpho-syntactic\\
+      and graphemic hypotheses made testable
+    \item \alert{In such cases, aggressive destructive normalization\\
+      removes features from the corpus which make it unique!}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  {Non-destructive normalization in COW2013}
+  Spelling correction can be represented as annotation layer.\\
+  (Dehyphenation cannot, at least not efficiently.)\\
+
+  \vspace{0.3cm}
+  \begin{center}
+    \scalebox{.6}{
+    \begin{tabular}{llllll}
+      \hline
+  \textbf{Word} & \textbf{POS} & \textbf{Lemma} & {\textbf{Corr.Word}}& {\textbf{Corr.POS}}& {\textbf{Corr.Lemma}}\\[1ex]
+      \hline
+
+  \ldots  &               &               &{\ldots}   &               &               \\
+  the     &DT&	the 	&{the}	&{DT}	&{the} 	\\
+  players	&NNS&	player	&{players}  &{NNS}	&{player}	\\
+  play	&VBP&	play	&{play}	&{VBP}	&{play}	\\
+  .	&SENT&	.	&{.}	&{SENT}	&{.}	\\
+  The	&DT&	the	&{The}	&{DT}	&{the}	\\
+  FA	&NP&	FA	&{FA}	&{NP}	&{FA}	\\
+  does	&VBZ&	do	&{does}	&{VBZ}	&{do}	\\
+  \alert{abosolutley}&\alert{JJ}&\alert{$<$unknown$>$}& {\alert{absolutely}}&	{\alert{RB}}	&{\alert{absolutely}}       \\
+  nothing	&NN&	nothing	&{nothing}  &{NN}	&{nothing}	\\
+  to	&TO&	to	&{to}	&{TO}	&{to}	\\
+  help	&VB&	help	&{help}	&{VB}	&{help}	\\
+  Clubs	&NNS&	club	&{Clubs}	&{NNS}	&{club}	\\
+  \ldots&                 &                &  \ldots   &  &\\               
+      \hline
+    \end{tabular}
+    }
+  \end{center}
+\end{frame}

@@ -1,0 +1,128 @@
+\section{HyDRA -- Hyphenation removal}
+
+\begin{frame}
+  {Hyphenated words in web corpora}
+  \begin{itemize}
+    \item sources: pasted material from word processors, etc.
+    \item disadvantage: no line endings as additional hint,\\
+      \cite{GrefenstetteTapanainen1994} too naïve
+    \item little discussion available, e.\,g., \cite{Zamorano2011} 
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  {Examples of type I: Merge}
+  \begin{itemize}
+    \item \alert{Seiten- streifen} $\Rightarrow$ Seitenstreifen (\textit{hard shoulder})
+    \item \alert{an- wählen} $\Rightarrow$ anwählen (\textit{select\slash dial})
+    \item \alert{E- missionen} $\Rightarrow$ Emissionen (\textit{emissions})
+    \item \alert{Physio- kratie} $\Rightarrow$ Physiokratie (\textit{Physiocracy})
+  \end{itemize}
+
+  \vspace{0.5cm}
+  {\tiny All examples are from DECOW2012 (German) or UKCOW2012 (English)}
+\end{frame}
+
+\begin{frame}
+  {Examples of type II: Concatenate}
+  \begin{itemize}
+    \item \alert{Philipps- Lagerverkauf} $\Rightarrow$\\
+      Philipps-Lagerverkauf (\textit{Philips stock sale})
+    \item \alert{U- Bootalarm} $\Rightarrow$ U-Bootalarm (\textit{submarine alert})
+    \item \alert{5- Alpha-Reduktase-Hemmer} $\Rightarrow$\\
+      5-Alpha-Reduktase-Hemmer (\textit{5-alpha-reductase inhibitor})
+    \item \alert{18- karätigem} $\Rightarrow$ 18-karätigem (\textit{18-carat})
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  {Examples of type III: Leavealone}
+  \begin{itemize}
+    \item \alert{deutsch- u.} bald auch der englischsprachigen Blogosphäre\\
+      \textit{the German- and soon also the English-speaking blogosphere}
+    \item \alert{Film- und} Entertainment-Gesellschaft\\
+      \textit{movie(-) and entertainment society}
+    \item die \alert{Innen- gegenüber} der Außenentwicklung\\
+      \textit{the domestic(-) versus the foreign development}
+    \item weder ein \alert{TV- noch} ein Radiosender\\
+      \textit{neither a TV(-) nor a radio station}
+    \item jeder \alert{Sport- insbesondere} Volleyballbegeisterte\\
+      \textit{each sports(-), especially volleyball fan}\\
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  {English examples}
+  \begin{itemize}
+    \item It has a \alert{graph- ing} facility for scatterplots (Merge)
+    \item any child whose \alert{self- esteem} needs a boost (Concatenate)
+    \item I called upon my \alert{Uranus- Neptune} entity (Concatenate)
+    \item horseriding, and \alert{hang- and} paragliding (Leavealone)
+
+      \vspace{0.5cm}
+    \item some \alert{cases- and} interpretation - of classic 1960s\\
+      D-class movies (actually type IV: Dashify, currently ignored,\\
+      i.\,e., treated as Leavealone)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  {HyDRA -- Hyphenation Detection and Repair Application}
+  Common HyDRA component uses frequencies of bigram $b$\\
+  (of the form \alert{A- B}) and the frequencies\\
+  of its dehyphenation transformations from the corpus:\\
+  \vspace{0.3cm}
+  \begin{itemize}
+    \item frequency of the bigram itself: $f(b)$
+    \item frequency of the concatenation of the bigram: $f(C(b))$
+    \item frequency of the merge of the bigram: $f(M(b))$
+    \item currently \alert{not even frequencies of the two parts}
+    \item currently \alert{raw frequencies}, no (smoothed) probabilities
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  {Decision}
+  \begin{center}
+    The HyDRA API offers one function \texttt{hydra()}, which\\
+	
+    \vspace{1cm}
+    \onslide<2->{\large \alert{returns the most frequent of\\
+        $b$, $C(b)$, and $M(b)$}}\\
+
+	\vspace{1cm}
+	\onslide<3->{This was our first ``baseline'' attempt\ldots\\
+	and we left it at this.}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  {Evaluation}
+  \begin{itemize}
+    \item data and frequencies from a DECOW2012 slice (1.5 bn tokens)
+    \item n=684 
+    \item \alert{type accuracy 63.7\%}
+    \item \alert{token accuracy 99.6\%}\\
+      (tokens of the types from the sample in the whole corpus)
+    \item primary reason for low type accuracy:\\
+      Many separated nominal compounds with ``-''\\
+      are not concatenated when concatenation is unseen.
+    \item example: \textit{Foto- Frau} $\Rightarrow$ \textit{Foto-Frau}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  {Solutions considered\slash chosen}
+  \begin{itemize}
+    \item use unigram frequencies of parts of the bigram\\
+      (probably useless)
+    \item \ldots or use a language-specific rule for German\\
+      based on mixed capitalization of German nouns
+    \item \alert{one} simple exception rule -- quite effective:\\
+      \alert{If both parts have mixed capitalization, Concatenate!}
+    \item \alert{Type-Accuracy 91.8\% (+28.1\%)}
+    \item \alert{Token-Accuracy 99.9\% (+0.03\%)}
+    \item downside: does not generalize to other languages,\\
+      rules and evaluations for other languages missing
+  \end{itemize}
+\end{frame}
